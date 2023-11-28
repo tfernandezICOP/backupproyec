@@ -16,6 +16,7 @@ import Controladoras.ControladoraVehiculo;
 import Controladoras.ControladoraViaje;
 import Controladoras.ControladoraViajePaquete;
 import java.util.Date;
+import logisticaigu.Menu;
 import logisticalogica.Cliente;
 import logisticalogica.DetalleMantenimiento;
 import logisticalogica.Empleado;
@@ -28,6 +29,7 @@ import logisticalogica.Vehiculo;
 import logisticalogica.Viaje;
 import logisticalogica.ViajePaquete;
 import logisticapersistencia.ControladoraPersistencia;
+import logisticapersistencia.PaqueteJpaController;
 
 /**
  *
@@ -36,7 +38,7 @@ import logisticapersistencia.ControladoraPersistencia;
 public class Proyectofinallogistica {
 
     public static void main(String[] args) {
-        Controladoras.ControladoraCliente controlcliente = new ControladoraCliente();
+    /*   Controladoras.ControladoraCliente controlcliente = new ControladoraCliente();
         Cliente cliente = new Cliente();
        //CLIENTE
 // Establecemos los valores de las propiedades del cliente.
@@ -425,6 +427,29 @@ controlviajepaquete.crearviajepaquete(viajepaquete5);
         controlempleviaje.crearempleadoviaje(empleadoviaje3);
         controlempleviaje.crearempleadoviaje(empleadoviaje4);
         controlempleviaje.crearempleadoviaje(empleadoviaje5);
+*/
+        
+    /*    Controladoras.ControladoraMarca controlmarca = new ControladoraMarca();
+  
+  
+    Marca marca6 = new Marca();
+    marca6.setModelo("Renault");
+    marca6.setTipo("Utilitario");
+    controlmarca.crearmarca(marca6);
 
+      Controladoras.ControladoraVehiculo controlvehiculo = new ControladoraVehiculo();
+     Vehiculo vehiculo10 = new Vehiculo();
+     vehiculo10.setCapacidad_carga(800);
+     vehiculo10.setNro_vehiculo(6);
+     vehiculo10.setPatente("AC296CD");
+     vehiculo10.setMarca(marca6);
+     controlvehiculo.crearvehiculo(vehiculo10);
+
+
+   Menu menu = new Menu();
+   menu.setVisible(true);
+*/
+    
+        PaqueteJpaController paque = new PaqueteJpaController();
 }
 }

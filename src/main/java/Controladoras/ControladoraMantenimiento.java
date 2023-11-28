@@ -4,6 +4,7 @@
  */
 package Controladoras;
 
+import java.util.Date;
 import logisticalogica.Mantenimiento;
 import logisticapersistencia.ControladoraPersistencia;
 
@@ -12,9 +13,13 @@ import logisticapersistencia.ControladoraPersistencia;
  * @author ULTRA
  */
 public class ControladoraMantenimiento {
-    ControladoraPersistencia controlpersis = new ControladoraPersistencia();
+     ControladoraPersistencia controlpersis = new ControladoraPersistencia();
     public void crearmantenimiento (Mantenimiento mantenimiento) {
-        controlpersis.crearmantenimiento (mantenimiento);
+       controlpersis.crearmantenimiento (mantenimiento);
         
     }
+     public void insertarMantenimiento(Date fechaDate, int nuevosKilometros, int vehiculoId) {
+        controlpersis.insertarMantenimiento(fechaDate, nuevosKilometros, vehiculoId);
+     }
+     
 }

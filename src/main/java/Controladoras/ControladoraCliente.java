@@ -4,6 +4,7 @@
  */
 package Controladoras;
 
+import java.util.List;
 import logisticalogica.Cliente;
 import logisticapersistencia.ControladoraPersistencia;
 
@@ -16,4 +17,14 @@ public class ControladoraCliente {
     public void crearcliente (Cliente cliente){
         controlpersis.crearcliente (cliente);
     }
+    public List<Cliente> obtenerTodosLosClientes() {
+    return controlpersis.obtenerTodosLosClientes();
+}
+    public List<Cliente> filtrarClientesPorNumeroDocumento(int documento) {
+        return controlpersis.filtrarClientesPorNumeroDocumento(documento);
+    }
+     public List<Cliente> filtrarNombreyApellido(String nombreape) {
+        return controlpersis.filtrarNombreyApellido(nombreape);
+    }
+    
 }

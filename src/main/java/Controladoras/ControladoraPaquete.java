@@ -4,6 +4,7 @@
  */
 package Controladoras;
 
+import java.util.List;
 import logisticalogica.Paquete;
 import logisticapersistencia.ControladoraPersistencia;
 
@@ -12,8 +13,22 @@ import logisticapersistencia.ControladoraPersistencia;
  * @author ULTRA
  */
 public class ControladoraPaquete {
+    
     ControladoraPersistencia controlpersis = new ControladoraPersistencia();
     public void crearpaquete (Paquete paquete){
         controlpersis.crearpaquete(paquete);
     }
+    public List<Paquete> obtenerTodosLosPaquetes() {
+    return controlpersis.obtenerTodosLosPaquetes();
+    }
+        public List<Paquete> filtrarPaquetesPorCodigo(int codigo) {
+        return controlpersis.obtenerPaquetesPorCodigo(codigo);
+    }
+
+    public void actualizarEstadoPaquete(Paquete paquete) {
+        controlpersis.actualizarEstadoPaquete(paquete);
+    }
+    
+        
 }
+

@@ -5,6 +5,7 @@
 package logisticalogica;
 
 import java.io.Serializable;
+import java.sql.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -40,8 +41,15 @@ public class Paquete implements Serializable {
     private Cliente emisor;
 
     @ManyToOne
+   
+    
     @JoinColumn(name = "clienteReceptorID")
     private Cliente receptor;
+    @Column(name = "fechaentrega")
+    private Date fechaEntrega;
+
+    @Column(name = "fecharecibido")
+    private Date fechaRecibido;
 
     public Paquete() {
     }
@@ -111,4 +119,22 @@ public class Paquete implements Serializable {
     public void setReceptor(Cliente receptor) {
         this.receptor = receptor;
     }
+
+    public Date getFechaEntrega() {
+        return fechaEntrega;
+    }
+
+    public void setFechaEntrega(Date fechaEntrega) {
+        this.fechaEntrega = fechaEntrega;
+    }
+
+    public Date getFechaRecibido() {
+        return fechaRecibido;
+    }
+
+    public void setFechaRecibido(Date fechaRecibido) {
+        this.fechaRecibido = fechaRecibido;
+    }
+
+    
 }

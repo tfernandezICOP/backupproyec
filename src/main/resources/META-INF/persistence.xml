@@ -8,11 +8,11 @@
     <class>logisticalogica.EmpleadoViaje</class>
     <class>logisticalogica.Mantenimiento</class>
     <class>logisticalogica.Marca</class>
-    <class>logisticalogica.Paquete</class>
     <class>logisticalogica.ParteDiario</class>
     <class>logisticalogica.Vehiculo</class>
     <class>logisticalogica.Viaje</class>
     <class>logisticalogica.ViajePaquete</class>
+    <class>logisticalogica.Paquete</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/proyectofinal?serverTimezone=UTC"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>

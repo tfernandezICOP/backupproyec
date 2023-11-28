@@ -4,7 +4,9 @@
  */
 package Controladoras;
 
+import java.util.List;
 import logisticalogica.DetalleMantenimiento;
+import logisticalogica.Mantenimiento;
 import logisticapersistencia.ControladoraPersistencia;
 
 /**
@@ -13,8 +15,13 @@ import logisticapersistencia.ControladoraPersistencia;
  */
 public class ControladoraDetalleMante {
     ControladoraPersistencia controlpersis = new ControladoraPersistencia();
-    public void creardetallemante(DetalleMantenimiento detallemante){
-        controlpersis.creardetallemante(detallemante);
+    public void guardarTipoMantenimiento(DetalleMantenimiento tipoMantenimiento, int idMantenimiento) {
+       
+        controlpersis.guardarTipoMantenimiento(tipoMantenimiento);
+    }
+    
+    public List<DetalleMantenimiento> obtenerDetallesMantenimiento() {
+       return controlpersis.obtenerDetallesMantenimiento();
     }
     
 }

@@ -38,7 +38,8 @@ import javax.persistence.TemporalType;
     @ManyToOne
     @JoinColumn(name = "vehiculoID")
     private Vehiculo vehiculo;
-
+    
+    
     public Mantenimiento() {
     }
 
