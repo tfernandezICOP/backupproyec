@@ -52,6 +52,21 @@
             <version>2.7.12</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>Jtatto.libreria</groupId>
+            <artifactId>libreria</artifactId>
+            <version>1.6.13</version>
+        </dependency>
+        <dependency>
+            <groupId>libreria.flatlaf</groupId>
+            <artifactId>libreria.flatlaf</artifactId>
+            <version>3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>facha</groupId>
+            <artifactId>fachaapareciencia</artifactId>
+            <version>3.3</version>
+        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
