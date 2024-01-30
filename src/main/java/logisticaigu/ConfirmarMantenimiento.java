@@ -5,10 +5,16 @@
 package logisticaigu;
 
 import Controladoras.ControladoraMantenimiento;
+import Controladoras.ControladoraMantenimientoRealizado;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.MaskFormatter;
+import logisticalogica.MantenimientoRealizado;
 import logisticalogica.Vehiculo;
 /**
  *
@@ -16,13 +22,34 @@ import logisticalogica.Vehiculo;
  */
 public class ConfirmarMantenimiento extends javax.swing.JFrame {
 
-    Vehiculo vehiculoSeleccionado = RegistrarMantenimiento.vehiculoSeleccionado;
+    Vehiculo vehiculoSeleccionado; // Deja de inicializarlo aquí
+        private Vehiculo vehiculo;
+    private ControladoraMantenimientoRealizado controladoraMantenimientoRealizado = new ControladoraMantenimientoRealizado();
+    private MantenimientoRealizado mantenimientoExistente; // Agrega esta línea
+    private boolean tieneMantenimientoRealizado; // Agrega esta línea
+    public ConfirmarMantenimiento(Vehiculo vehiculo)  {
+        this.vehiculo = vehiculo;
 
-    public ConfirmarMantenimiento()  {
         initComponents();
+        inicializarVentana(); // Llama a la inicialización después de haber asignado el vehículo
+        establecerFormatoFecha();
 
     }
-   
+  private void establecerFormatoFecha() {
+    try {
+        MaskFormatter mask = new MaskFormatter("##/##/####");
+        mask.setPlaceholderCharacter(' '); // Usa un espacio en blanco como carácter de relleno
+
+        // Establece el formato en el campo existente jFormattedTextField1
+        jFormattedTextField1.setFormatterFactory(new DefaultFormatterFactory(mask));
+        jFormattedTextField1.setColumns(10); // Puedes ajustar el número de columnas según tus necesidades
+        jFormattedTextField1.setFocusLostBehavior(JFormattedTextField.COMMIT); // Asegura que la entrada se confirme al perder el foco
+
+    } catch (ParseException ex) {
+        ex.printStackTrace();
+    }
+}
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -35,13 +62,11 @@ public class ConfirmarMantenimiento extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         Marca = new javax.swing.JLabel();
         Patente = new javax.swing.JLabel();
-        fecha = new javax.swing.JFormattedTextField();
+        jFormattedTextField1 = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -51,9 +76,12 @@ public class ConfirmarMantenimiento extends javax.swing.JFrame {
 
         jLabel2.setText("Fecha:");
 
-        jLabel3.setText("Km recorridos:");
-
-        jButton1.setText("Cancelar");
+        jButton1.setText("Volver");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Guardar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -66,13 +94,6 @@ public class ConfirmarMantenimiento extends javax.swing.JFrame {
 
         Patente.setText("Patente");
 
-        fecha.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
-        fecha.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fechaActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -83,29 +104,20 @@ public class ConfirmarMantenimiento extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(36, 36, 36)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(Marca, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jFormattedTextField1))
+                    .addComponent(Marca, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton2)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1)
-                        .addGap(14, 14, 14))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Patente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())))
+                        .addComponent(jButton1))
+                    .addComponent(Patente, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -116,17 +128,15 @@ public class ConfirmarMantenimiento extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Marca)
                     .addComponent(Patente))
-                .addGap(73, 73, 73)
+                .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(fecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
+                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 119, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addGap(30, 30, 30))
+                .addGap(21, 21, 21))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -145,75 +155,87 @@ public class ConfirmarMantenimiento extends javax.swing.JFrame {
     private ControladoraMantenimiento controladoraMantenimiento = new ControladoraMantenimiento();
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-     guardarDatosMantenimiento();
-
-        // Cambiar a la siguiente ventana
-        TipoMantenimiento tipoMantenimiento = new TipoMantenimiento(vehiculoSeleccionado);
-        tipoMantenimiento.setVisible(true);
-        this.dispose(); // Cierra la ventana actual
+    guardarDatosMantenimientoRealizado() ;
+       
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void fechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fechaActionPerformed
-       
-   
-    }//GEN-LAST:event_fechaActionPerformed
-    private void guardarDatosMantenimiento() {
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       AvisosMantenimiento avisomante =  new AvisosMantenimiento();
+       avisomante.setVisible(true);
+       dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+  
 
-        String nuevaFecha = fecha.getText();
-    int nuevosKilometros;
-
-    try {
-        nuevosKilometros = Integer.parseInt(jTextField2.getText());
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(null, "El valor de kilómetros es inválido. Ingrese un número válido.");
-        return;
-    }
-
-    if (nuevosKilometros < 15000) {
-        JOptionPane.showMessageDialog(null, "Los kilómetros deben ser mayores o iguales a 15,000 para realizar la actualización.");
-        return;
-    }
-
-    try {
-        Date fechaDate = new SimpleDateFormat("dd/MM/yyyy").parse(nuevaFecha);
-
-        if (vehiculoSeleccionado != null) {
-            int vehiculoId = vehiculoSeleccionado.getVehiculoID();
-            // Utiliza la instancia de ControladoraMantenimiento creada previamente
-            controladoraMantenimiento.insertarMantenimiento(fechaDate, nuevosKilometros, vehiculoId);
-            JOptionPane.showMessageDialog(null, "Mantenimiento guardado exitosamente.");
-        }
-    } catch (ParseException ex) {
-        JOptionPane.showMessageDialog(null, "Formato de fecha inválido. Utiliza el formato dd-MM-yyyy.");
-    }                               
-     }
     /**
      * @param args the command line arguments
      */
    void inicializarVentana() {
-    if (vehiculoSeleccionado != null) {
-        String patente = vehiculoSeleccionado.getPatente();
-        String marca = vehiculoSeleccionado.getMarca().getModelo();
+    if (vehiculo != null) {
+        String patente = vehiculo.getPatente();
+        String marca = vehiculo.getMarca().getModelo();
 
         // Actualizar las etiquetas con la información del vehículo
         Marca.setText("Marca: " + marca);
         Patente.setText("Patente: " + patente);
     }
 }
+private void guardarDatosMantenimientoRealizado() {
+    try {
+        // Obtener el último kilómetro recorrido del vehículo
+        int ultimoKmRecorrido = controladoraMantenimientoRealizado.obtenerKmRecorridosMasRecientes(vehiculo);
+
+        // Obtener la fecha ingresada por el usuario
+        String fechaStr = jFormattedTextField1.getText();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Date fecha = sdf.parse(fechaStr);
+
+        // Crear un nuevo mantenimiento
+        MantenimientoRealizado nuevoMantenimiento = new MantenimientoRealizado();
+        nuevoMantenimiento.setFechaMantenimiento(fecha);
+        nuevoMantenimiento.setVehiculo(vehiculo);
+        
+        // Establecer el último kilómetro recorrido
+        nuevoMantenimiento.setKmMantenimiento(ultimoKmRecorrido);
+
+        // Guardar el nuevo mantenimiento realizado
+        controladoraMantenimientoRealizado.guardarmantenimiento(nuevoMantenimiento);
+
+        // Crear una instancia de TipoMantenimiento y pasar el MantenimientoRealizado
+        TipoMantenimiento tipoMantenimientoFrame = new TipoMantenimiento(nuevoMantenimiento);
+
+        // Hacer visible la ventana de TipoMantenimiento
+        tipoMantenimientoFrame.setVisible(true);
+
+        // Mostrar un mensaje de éxito
+        JOptionPane.showMessageDialog(this, "Mantenimiento realizado guardado exitosamente");
+
+        // Cerrar la ventana actual después de abrir la nueva ventana
+        this.dispose();
+    } catch (ParseException ex) {
+        ex.printStackTrace();
+        // Mostrar un mensaje de error si hay un problema con la fecha
+        JOptionPane.showMessageDialog(this, "Error al procesar la fecha", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+
+
+
+
+
+
 
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Marca;
     private javax.swing.JLabel Patente;
-    private javax.swing.JFormattedTextField fecha;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 
    

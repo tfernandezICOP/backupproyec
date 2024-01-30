@@ -6,13 +6,16 @@ package logisticaigu;
 
 import Controladoras.ControladoraCliente;
 import Controladoras.ControladoraPaquete;
+import java.sql.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import logisticalogica.Cliente;
 import logisticalogica.Paquete;
+
 
 /**
  *
@@ -22,56 +25,75 @@ public class BuscarClienteReceptor extends javax.swing.JFrame {
      private ControladoraCliente controladoraCliente;
     private DefaultTableModel tableModel;
     private Paquete paquete; 
-    private Paquete paqueteTemporal;
+    private Paquete paqueteTemporal; // Asegúrate de tener este atributo en tu clase
     private ControladoraPaquete controladoraPaquete;
-
+    private int idClienteEmisorSeleccionado; // Nuevo atributo
+    private RegistrarPaquete registrarEnvio;
+    
 
     /**
      * Creates new form BuscarClienteReceptor
      */
-    public BuscarClienteReceptor() {
-        initComponents();
-        tableModel = (DefaultTableModel) jTable1.getModel();
-        controladoraCliente = new ControladoraCliente();
-        cargarClientesEnTabla();
-        inicializarVentana();
-        botonAceptar.setEnabled(false); 
-        paquete = new Paquete(); // Inicializar el paquete
+    public BuscarClienteReceptor(Paquete paqueteTemporal) {
 
+    initComponents();
+     this.paqueteTemporal = paqueteTemporal;
 
-        
-    }
+    tableModel = (DefaultTableModel) jTable1.getModel();
+    controladoraCliente = new ControladoraCliente();
+    cargarClientesEnTabla();
+    inicializarVentana();
+    botonAceptar.setEnabled(false);
+    registrarEnvio = new RegistrarPaquete(); // Esto es un ejemplo, ajusta según tu implementación
+    paquete = new Paquete();
     
-    
-     public void setPaqueteTemporal(Paquete paqueteTemporal) {
-        this.paqueteTemporal = paqueteTemporal;
+    // Inicializar campos del paquete
+    paquete.setEstado("PENDIENTE");
+    paquete.setFechaRecibido(new java.sql.Date(System.currentTimeMillis())); // Utiliza la fecha actual
+    paquete.setFechaEntrega(null); // Establecer la fecha de entrega como null inicialmente
+}
+    private void mostrarInfoPaqueteTemporal(Paquete paqueteTemporal) {
         if (paqueteTemporal != null) {
-            Codpaquete.setText("Cod paquete: " + String.valueOf(paqueteTemporal.getCodigo_paquete()));
+            System.out.println("Datos de paqueteTemporal:");
+            System.out.println("Código de paquete: " + paqueteTemporal.getCodigo_paquete());
+            System.out.println("Domicilio de entrega: " + paqueteTemporal.getDomicilioEntrega());
+            // Mostrar otros atributos según sea necesario
+        } else {
+            System.out.println("paqueteTemporal es nulo.");
         }
     }
-     
-      private void cargarClientesEnTabla() {
-    // Limpiar la tabla antes de cargar nuevos datos
-    tableModel.setRowCount(0);
-
-    List<Cliente> clientes = controladoraCliente.obtenerTodosLosClientes();
-    if (tableModel == null) {
-            System.out.println("tableModel es null. Algo está mal.");
-            return;
-        }
-    // Llenar la tabla con los datos de los clientes
-    for (Cliente cliente : clientes) {
-        String nombreCompleto = cliente.getNombre() + " " + cliente.getApellido();
-
-        Object[] rowData = {
-            nombreCompleto,
-            cliente.getNro_documento(),
-            cliente.getNro_telefono()
-        };
-        tableModel.addRow(rowData);
+     public void setPaqueteTemporal(Paquete paqueteTemporal) {
+    this.paqueteTemporal = paqueteTemporal;
+    if (paqueteTemporal != null) {
+        Codpaquete.setText("Cod paquete: " + String.valueOf(paqueteTemporal.getCodigo_paquete()));
+    } else {
+        Codpaquete.setText("Paquete temporal es nulo");
     }
 }
-       private void inicializarVentana() {
+
+
+    public void setIdClienteEmisorSeleccionado(int idClienteEmisorSeleccionado) {
+        this.idClienteEmisorSeleccionado = idClienteEmisorSeleccionado;
+    }
+      private void cargarClientesEnTabla() {
+        // Limpiar la tabla antes de cargar nuevos datos
+        tableModel.setRowCount(0);
+
+        List<Cliente> clientes = controladoraCliente.obtenerTodosLosClientes();
+
+        for (Cliente cliente : clientes) {
+            String nombreCompleto = cliente.getNombre() + " " + cliente.getApellido();
+
+            Object[] rowData = {
+                    nombreCompleto,
+                    cliente.getNro_documento(),
+                    cliente.getNro_telefono()
+            };
+            tableModel.addRow(rowData);
+        }
+    }
+
+    private void inicializarVentana() {
         jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
@@ -86,9 +108,42 @@ public class BuscarClienteReceptor extends javax.swing.JFrame {
                 }
             }
         });
+        ingresardocumento.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            filtrarClientes();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            filtrarClientes();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            filtrarClientes();
+        }
+    });
+    jTextField1.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                filtrarClientespornombreyape();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                filtrarClientespornombreyape();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                filtrarClientespornombreyape();
+            }
+        });
+    
     }
-       private Cliente obtenerClienteDesdeFilaSeleccionada(int filaSeleccionada) {
-        // Asegúrate de tener la lista de clientes actualizada
+
+    private Cliente obtenerClienteDesdeFilaSeleccionada(int filaSeleccionada) {
         List<Cliente> clientes = controladoraCliente.obtenerTodosLosClientes();
         if (filaSeleccionada >= 0 && filaSeleccionada < clientes.size()) {
             return clientes.get(filaSeleccionada);
@@ -96,7 +151,7 @@ public class BuscarClienteReceptor extends javax.swing.JFrame {
             return null;
         }
     }
-        private void filtrarClientes() {
+      private void filtrarClientes() {
     String numeroDocumentoStr = ingresardocumento.getText().trim();
 
     if (numeroDocumentoStr.isEmpty()) {
@@ -127,8 +182,10 @@ public class BuscarClienteReceptor extends javax.swing.JFrame {
         }
     }
 }
+
+
         
-         private void filtrarClientespornombreyape() {
+       private void filtrarClientespornombreyape() {
     String nombre = jTextField1.getText().trim(); // Obtener el nombre desde el campo correspondiente
     String apellido = ingresardocumento.getText().trim(); // Obtener el apellido desde el campo de número de documento
 
@@ -152,8 +209,6 @@ public class BuscarClienteReceptor extends javax.swing.JFrame {
             tableModel.addRow(rowData);
         }
     }
-
-    
 }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -161,62 +216,108 @@ public class BuscarClienteReceptor extends javax.swing.JFrame {
      * regenerated by the Form Editor.
      */
          
-         private void persistirPaqueteEnBD() {
+    // En el método seleccionarClienteReceptor()
+// En el método seleccionarClienteReceptor()
+// En el método seleccionarClienteReceptor()
+public void seleccionarClienteReceptor() {
     if (paqueteTemporal != null) {
-        controladoraPaquete = new ControladoraPaquete(); // Instancia de la controladora de paquetes
-        
-        // Obtener los clientes del paquete
-        Cliente clienteEmisor = paqueteTemporal.getEmisor();
-        Cliente clienteReceptor = paqueteTemporal.getReceptor();
-        
-        // Verificar si los clientes son nulos antes de acceder a sus métodos
-        if (clienteEmisor != null && clienteReceptor != null) {
-            // Obtener los ID de los clientes seleccionados
-            int idClienteEmisor = clienteEmisor.getClienteID();
-            int idClienteReceptor = clienteReceptor.getClienteID();
-        
-            // Establecer los ID de los clientes en el paquete
-            paqueteTemporal.getEmisor().setClienteID(idClienteEmisor);
-            paqueteTemporal.getReceptor().setClienteID(idClienteReceptor);
-            
-            // Guardar el paquete en la base de datos
-            controladoraPaquete.crearpaquete(paqueteTemporal);
-            
-            // Notificar al usuario que el paquete se ha guardado
-            JOptionPane.showMessageDialog(null, "El paquete se ha guardado en la base de datos");
+        // Obtén la fila seleccionada en la tabla
+        int filaSeleccionada = jTable1.getSelectedRow();
+
+        // Asegúrate de que haya una fila seleccionada
+        if (filaSeleccionada >= 0) {
+            // Obtén el cliente desde la fila seleccionada
+            Cliente clienteSeleccionado = obtenerClienteDesdeFilaSeleccionada(filaSeleccionada);
+
+            // Asegúrate de que el cliente seleccionado no sea nulo
+            if (clienteSeleccionado != null) {
+                // Mostrar confirmación antes de establecer el cliente receptor
+                int confirmacion = JOptionPane.showConfirmDialog(this,
+                        "¿Deseas seleccionar al siguiente cliente como receptor?\n\n" +
+                        "Nombre: " + clienteSeleccionado.getNombre() + "\n" +
+                        "Apellido: " + clienteSeleccionado.getApellido(),
+                        "Confirmar selección", JOptionPane.YES_NO_OPTION);
+
+                if (confirmacion == JOptionPane.YES_OPTION) {
+                    // El usuario confirmó la selección, establecer el cliente receptor en el paqueteTemporal
+                    paqueteTemporal.setReceptor(clienteSeleccionado);
+
+                    // Añade mensajes de depuración
+                    System.out.println("PaqueteTemporal en BuscarClienteReceptor:");
+                    mostrarInfoPaqueteTemporal(paqueteTemporal);
+
+                    // Actualizar estado y fecha de recibido
+                    paqueteTemporal.setEstado("PENDIENTE");
+                    paqueteTemporal.setFechaRecibido(new java.sql.Date(System.currentTimeMillis()));
+
+                    // Llamar al método para persistir el paquete en la base de datos
+                    persistirPaqueteEnBD();
+
+                    // Mostrar el ID del Cliente Receptor en la consola (puedes cambiarlo según tus necesidades)
+                    mostrarCuadroDialogoIDClienteReceptor(clienteSeleccionado.getClienteID());
+                } else {
+                    // El usuario optó por no confirmar la selección
+                    System.out.println("Selección del cliente cancelada.");
+                    return; // Puedes agregar más lógica aquí según tus necesidades
+                }
+            } else {
+                // Si el cliente seleccionado es nulo, simplemente no hacemos nada aquí.
+            }
         } else {
-            // Notificar al usuario si alguno de los clientes es nulo
-            JOptionPane.showMessageDialog(null, "Cliente Emisor o Receptor es nulo.");
+            System.out.println("Por favor, selecciona un cliente.");
         }
     } else {
-        // Notificar al usuario si no se ha seleccionado ningún paquete
-        JOptionPane.showMessageDialog(null, "No se ha seleccionado ningún paquete para guardar");
-    }
-}
-    private void seleccionarClienteReceptor() {
-    int filaSeleccionada = jTable1.getSelectedRow();
-    if (filaSeleccionada >= 0) {
-        Cliente clienteSeleccionado = obtenerClienteDesdeFilaSeleccionada(filaSeleccionada);
-        
-        // Para depuración
-        System.out.println("Cliente seleccionado: " + clienteSeleccionado);
-
-        if (clienteSeleccionado != null) {
-            paquete.setReceptor(clienteSeleccionado); // Asignar el cliente receptor al paquete
-
-            // Para depuración
-            System.out.println("Cliente receptor asignado: " + paquete.getReceptor());
-            
-            persistirPaqueteEnBD(); // Persistir el paquete actualizado en la base de datos
-        } else {
-            JOptionPane.showMessageDialog(null, "El cliente seleccionado es nulo.");
-        }
-    } else {
-        JOptionPane.showMessageDialog(null, "Por favor, seleccione un cliente.");
+        System.out.println("El paquete es nulo. Verifica su inicialización.");
     }
 }
 
 
+
+
+
+
+
+private void persistirPaqueteEnBD() {
+    if (paqueteTemporal != null) {
+        System.out.println("Código de paquete: " + paqueteTemporal.getCodigo_paquete());
+
+        // Resto del código para persistir el paquete en la base de datos
+        try {
+            // Actualizar estado y fecha de recibido antes de persistir
+            paqueteTemporal.setEstado("PENDIENTE");
+            paqueteTemporal.setFechaRecibido(new java.sql.Date(System.currentTimeMillis()));
+
+            // Ejemplo: Guardar el paquete en la base de datos utilizando la controladora del paquete
+            ControladoraPaquete controladoraPaquete = new ControladoraPaquete();
+            controladoraPaquete.guardarPaquete(paqueteTemporal);
+
+            System.out.println("Paquete persistido en la base de datos correctamente.");
+        } catch (Exception e) {
+            // Manejo de excepciones en caso de error al persistir el paquete
+            System.out.println("Error al persistir el paquete en la base de datos: " + e.getMessage());
+            e.printStackTrace();
+            // Puedes agregar más acciones según tus necesidades, como mostrar un mensaje de error al usuario.
+        }
+
+    } else {
+        System.out.println("paqueteTemporal es nulo.");
+        // Manejo de la situación cuando paqueteTemporal es nulo
+        // Puedes agregar mensajes de error, lanzar excepciones u otras acciones según tus necesidades
+    }
+}
+
+
+
+
+
+
+
+
+
+private void mostrarCuadroDialogoIDClienteReceptor(int idClienteReceptor) {
+    JOptionPane.showMessageDialog(null, "ID del Cliente Receptor: " + idClienteReceptor);
+}
+   
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -233,6 +334,7 @@ public class BuscarClienteReceptor extends javax.swing.JFrame {
         botonAceptar = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -262,6 +364,11 @@ public class BuscarClienteReceptor extends javax.swing.JFrame {
         Codpaquete.setText("Cod paquete:");
 
         jButton3.setText("Registrar");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         botonAceptar.setText("Aceptar");
         botonAceptar.addActionListener(new java.awt.event.ActionListener() {
@@ -270,7 +377,7 @@ public class BuscarClienteReceptor extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Cancelar");
+        jButton1.setText("Volver");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -281,45 +388,53 @@ public class BuscarClienteReceptor extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Buscar Cliente receptor");
 
+        jLabel1.setText("id emisor: ");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+                        .addGap(0, 478, Short.MAX_VALUE)
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(botonAceptar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton1)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(numerodocclienteemisor)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ingresardocumento, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(46, 46, 46)
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(Codpaquete)
-                                .addGap(30, 30, 30))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(botonAceptar)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton1)
-                                .addContainerGap())))))
-            .addComponent(jScrollPane1)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 722, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addContainerGap())))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(48, 48, 48)
+                .addComponent(numerodocclienteemisor)
+                .addGap(18, 18, 18)
+                .addComponent(ingresardocumento, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(Codpaquete)
+                .addGap(42, 42, 42))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(58, 58, 58))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addGap(3, 3, 3)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(ingresardocumento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -328,7 +443,7 @@ public class BuscarClienteReceptor extends javax.swing.JFrame {
                     .addComponent(Codpaquete))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton3)
                     .addComponent(botonAceptar)
@@ -355,34 +470,59 @@ public class BuscarClienteReceptor extends javax.swing.JFrame {
     }//GEN-LAST:event_ingresardocumentoActionPerformed
 
     private void botonAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAceptarActionPerformed
-        seleccionarClienteReceptor();
-        persistirPaqueteEnBD();
+      seleccionarClienteReceptor();
+    System.out.println("ID del Cliente Emisor en BuscarClienteReceptor: " + idClienteEmisorSeleccionado);
+    
+    int opcion = JOptionPane.showConfirmDialog(this, "¿Quieres seguir registrando paquetes?", "Confirmar", JOptionPane.YES_NO_OPTION);
+
+    // Verificar la opción seleccionada
+    if (opcion == JOptionPane.YES_OPTION) {
+        // Si el usuario elige "Sí", cerrar la ventana actual
+        dispose();
+
+        // Abrir la pantalla para registrar un nuevo envío
+        registrarEnvio.mostrarVentana();
+    } else {
+        // Si el usuario elige "No", salir del programa
+        Menu menu = new Menu();
+        menu.setVisible(true);
+        this.dispose();
+    }
+    
 
     }//GEN-LAST:event_botonAceptarActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        dispose();
+        BuscarClientes buscarclientes = new BuscarClientes(paqueteTemporal);
+    buscarclientes.setPaqueteTemporal(paqueteTemporal); // Restaura el paqueteTemporal en la nueva ventana
+    buscarclientes.mostrarVentana(); // Muestra la ventana RegistrarPaquete
+    this.dispose(); // Cierra la ventana actual (BuscarClientes)
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    RegistrarClienteRecep registrarclienterecep = new RegistrarClienteRecep(paqueteTemporal);
+        registrarclienterecep.setVisible(true);
+        this.dispose();
+
+
+        
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
      */
     // ... (otros métodos de la clase)
 
-    private Cliente obtenerClienteSeleccionadoEnTabla() {
-    int filaSeleccionada = jTable1.getSelectedRow();
+   
 
-    if (filaSeleccionada >= 0) {
-        return obtenerClienteDesdeFilaSeleccionada(filaSeleccionada);
-    } else {
-        return null;
-    }
+
+public void actualizarIDClienteEmisor(int idClienteEmisor) {
+    jLabel1.setText("ID del Cliente Emisor: " + idClienteEmisor);
 }
-
-// Resto de tus métodos de la clase
-
-
-
+private void asignarClientesAlPaquete(Cliente clienteEmisor, Cliente clienteReceptor) {
+    paquete.setEmisor(clienteEmisor);
+    paquete.setReceptor(clienteReceptor);
+}
        
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Codpaquete;
@@ -390,6 +530,7 @@ public class BuscarClienteReceptor extends javax.swing.JFrame {
     private javax.swing.JTextField ingresardocumento;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;

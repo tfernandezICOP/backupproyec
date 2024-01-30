@@ -5,7 +5,6 @@
 package Controladoras;
 
 import logisticalogica.ViajePaquete;
-import logisticalogica.ViajePaquete_;
 import logisticapersistencia.ControladoraPersistencia;
 
 /**

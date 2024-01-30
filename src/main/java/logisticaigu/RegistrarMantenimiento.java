@@ -88,7 +88,7 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Cancelar");
+        jButton1.setText("Volver");
 
         Aceptar.setText("Aceptar");
         Aceptar.addActionListener(new java.awt.event.ActionListener() {
@@ -169,11 +169,12 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
     }//GEN-LAST:event_IngresarmarcaActionPerformed
 
     private void AceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AceptarActionPerformed
-    ConfirmarMantenimiento ventanaConfirmar = new ConfirmarMantenimiento();
+  /* ConfirmarMantenimiento ventanaConfirmar = new ConfirmarMantenimiento();
         ventanaConfirmar.inicializarVentana();
 
     ventanaConfirmar.setVisible(true);
     this.dispose(); // Cierra la ventana actual, si se desea
+        */
     }//GEN-LAST:event_AceptarActionPerformed
 
     private void IngresarpatenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IngresarpatenteActionPerformed

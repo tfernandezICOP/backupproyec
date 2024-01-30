@@ -90,6 +90,7 @@ public class Viaje implements Serializable {
     public void setVehiculo(Vehiculo vehiculo) {
         this.vehiculo = vehiculo;
     }
-    
+
+   
     
 }

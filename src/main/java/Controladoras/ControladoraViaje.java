@@ -4,6 +4,7 @@
  */
 package Controladoras;
 
+import logisticalogica.Vehiculo;
 import logisticalogica.Viaje;
 import logisticapersistencia.ControladoraPersistencia;
 
@@ -16,4 +17,11 @@ public class ControladoraViaje {
     public void crearviaje (Viaje viaje){
         controlpersis.crearviaje(viaje);
     }
+    public void guardarViaje(Viaje viaje) {
+        controlpersis.guardarViaje(viaje);
+    }
+    public Viaje obtenerViajePorId(int viajeID) {
+        return controlpersis.obtenerViajePorId(viajeID);
+    }
+
 }

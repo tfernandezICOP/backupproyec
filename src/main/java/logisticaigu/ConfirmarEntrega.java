@@ -74,7 +74,12 @@ public class ConfirmarEntrega extends javax.swing.JFrame {
 
         jLabel2.setText("Codigo paquete:");
 
-        jButton1.setText("Cancelar");
+        jButton1.setText("Volver");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Confirmar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -150,27 +155,47 @@ public class ConfirmarEntrega extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        int filaSeleccionada = jTable1.getSelectedRow();
+    int filaSeleccionada = jTable1.getSelectedRow();
 
     if (filaSeleccionada == -1) {
         JOptionPane.showMessageDialog(this, "Por favor, seleccione un paquete para confirmar la entrega", "Paquete no seleccionado", JOptionPane.WARNING_MESSAGE);
     } else {
         Paquete paqueteSeleccionado = paquetes.get(filaSeleccionada);
 
-        if (!paqueteSeleccionado.getEstado().equals("Entregado")) {
-            paqueteSeleccionado.setEstado("Entregado");
+        // Array con las opciones del cuadro de diálogo
+        Object[] opciones = {"Entregado", "Devuelto"};
+        
+        // Mostrar cuadro de diálogo
+        int seleccion = JOptionPane.showOptionDialog(this, "Seleccione el estado del paquete:", "Confirmar Estado",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, opciones, opciones[0]);
 
-            // Llamada al método para actualizar el estado del paquete en la base de datos
+        if (seleccion != JOptionPane.CLOSED_OPTION) {
+            // Actualizar el estado y la fecha de entrega del paquete en la base de datos
+            paqueteSeleccionado.setFechaEntrega(new java.sql.Date(new java.util.Date().getTime())); // Fecha actual
+
+            if (seleccion == 0) {
+                // Entregado
+                paqueteSeleccionado.setEstado("Entregado");
+            } else {
+                // Devuelto
+                paqueteSeleccionado.setEstado("Devuelto");
+            }
+
             controladoraPaquete.actualizarEstadoPaquete(paqueteSeleccionado);
+            controladoraPaquete.actualizarFechaEntregaPaquete(paqueteSeleccionado);
 
             // Actualiza la tabla para reflejar el cambio
             DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-            modelo.setValueAt("Entregado", filaSeleccionada, 3); // El 3 representa la columna del estado en la tabla
-        } else {
-            JOptionPane.showMessageDialog(this, "El paquete ya ha sido entregado", "Paquete ya entregado", JOptionPane.INFORMATION_MESSAGE);
+            modelo.setValueAt(paqueteSeleccionado.getEstado(), filaSeleccionada, 3); // El 3 representa la columna del estado en la tabla
         }
     }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        GestionarEntrega atras = new GestionarEntrega();
+        atras.setVisible(true);
+        dispose(); 
+      }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -196,18 +221,21 @@ public class ConfirmarEntrega extends javax.swing.JFrame {
     }
 }
   public void mostrarPaquetes(List<Paquete> paquetes) {
-    DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-    modelo.setRowCount(0); // Limpiar la tabla
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        modelo.setRowCount(0); // Limpiar la tabla
 
-    for (Paquete paquete : paquetes) {
-        modelo.addRow(new Object[]{
-            paquete.getCodigo_paquete(),
-            paquete.getDescripcion(),
-            paquete.getDomicilioEntrega(),
-            paquete.getEstado()
-        });
+        for (Paquete paquete : paquetes) {
+            // Solo agregar a la tabla los paquetes en estado "EN CAMINO"
+            if ("EN CAMINO".equals(paquete.getEstado())) {
+                modelo.addRow(new Object[]{
+                    paquete.getCodigo_paquete(),
+                    paquete.getDescripcion(),
+                    paquete.getDomicilioEntrega(),
+                    paquete.getEstado()
+                });
+            }
+        }
     }
-}
   
  private void filtrarPaquetes() {
     String codigoPaqueteTexto = jTextField1.getText();

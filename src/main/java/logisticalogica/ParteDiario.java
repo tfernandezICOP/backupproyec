@@ -31,10 +31,7 @@ public class ParteDiario implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fecha;
 
-    @Column(name = "horas")
-    private Integer horas;
-
-    @Column(name = "km")
+    @Column(name = "kmrecorridos")
     private Integer km;
 
     @ManyToOne
@@ -44,13 +41,14 @@ public class ParteDiario implements Serializable {
     public ParteDiario() {
     }
 
-    public ParteDiario(Integer parteDiarioID, Date fecha, Integer horas, Integer km, Vehiculo vehiculo) {
+    public ParteDiario(Integer parteDiarioID, Date fecha, Integer km, Vehiculo vehiculo) {
         this.parteDiarioID = parteDiarioID;
         this.fecha = fecha;
-        this.horas = horas;
         this.km = km;
         this.vehiculo = vehiculo;
     }
+
+   
 
     public Integer getParteDiarioID() {
         return parteDiarioID;
@@ -68,14 +66,7 @@ public class ParteDiario implements Serializable {
         this.fecha = fecha;
     }
 
-    public Integer getHoras() {
-        return horas;
-    }
-
-    public void setHoras(Integer horas) {
-        this.horas = horas;
-    }
-
+   
     public Integer getKm() {
         return km;
     }

@@ -6,6 +6,7 @@ package logisticaigu;
 
 import Controladoras.ControladoraVehiculo;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import static logisticaigu.RegistrarMantenimiento.vehiculoSeleccionado;
 import logisticalogica.Paquete;
@@ -43,6 +44,24 @@ public class GestionarEntrega extends javax.swing.JFrame {
             filtrarPorPatente();
         }
     });
+
+    // Agregar DocumentListener a Ingresarmarca
+    Ingresarmarca.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+        @Override
+        public void insertUpdate(javax.swing.event.DocumentEvent evt) {
+            filtrarPorModelo();
+        }
+
+        @Override
+        public void removeUpdate(javax.swing.event.DocumentEvent evt) {
+            filtrarPorModelo();
+        }
+
+        @Override
+        public void changedUpdate(javax.swing.event.DocumentEvent evt) {
+            // No es necesario para campos de texto sin formato
+        }
+    });
 }
 
     /**
@@ -71,7 +90,12 @@ public class GestionarEntrega extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Gestionar Entrega");
 
-        jButton1.setText("Cancelar");
+        jButton1.setText("Volver");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Aceptar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -177,15 +201,37 @@ public class GestionarEntrega extends javax.swing.JFrame {
     }//GEN-LAST:event_IngresarpatenteActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if (vehiculoSeleccionado != null) {
+       if (vehiculoSeleccionado != null) {
         List<Paquete> paquetes = controladoraVehiculo.obtenerPaquetesPorVehiculo(vehiculoSeleccionado);
-        // Aquí deberías pasar la lista de paquetes a la pantalla ConfirmarEntrega y mostrarla
-        ConfirmarEntrega confirmarentrega = new ConfirmarEntrega();
-        confirmarentrega.setVisible(true);
+
+        // Verificar si hay paquetes en estado "EN CAMINO"
+        boolean hayPaquetesEnCamino = false;
+        for (Paquete paquete : paquetes) {
+            if ("EN CAMINO".equals(paquete.getEstado())) {
+                hayPaquetesEnCamino = true;
+                break;
+            }
+        }
+
+        if (hayPaquetesEnCamino) {
+            // Hay paquetes en camino, oculta la ventana actual y muestra la ventana ConfirmarEntrega
+            this.setVisible(false);
+            ConfirmarEntrega confirmarEntrega = new ConfirmarEntrega();
+            confirmarEntrega.setVisible(true);
+        } else {
+            // No hay paquetes en camino, mostrar mensaje y no cerrar la ventana actual
+            JOptionPane.showMessageDialog(this, "Este vehículo no tiene paquetes ", "Sin Paquetes en Camino", JOptionPane.INFORMATION_MESSAGE);
+        }
     } else {
         // No se ha seleccionado ningún vehículo, mostrar un mensaje de error o manejar la situación según sea necesario
-    }        
+    }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Menu atras = new Menu();
+        atras.setVisible(true);
+        dispose(); // Cierra la pantalla actual
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

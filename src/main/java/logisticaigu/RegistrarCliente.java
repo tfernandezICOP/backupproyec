@@ -4,17 +4,26 @@
  */
 package logisticaigu;
 
+import Controladoras.ControladoraCliente;
+import javax.swing.JOptionPane;
+import logisticalogica.Paquete;
+
 /**
  *
  * @author ULTRA
  */
 public class RegistrarCliente extends javax.swing.JFrame {
-
+        private ControladoraCliente controladoraCliente;
+        private Paquete paqueteTemporal;
     /**
      * Creates new form RegistrarCliente
      */
-    public RegistrarCliente() {
+    public RegistrarCliente(Paquete paqueteTemporal) {
         initComponents();
+       controladoraCliente = new ControladoraCliente();
+       this.paqueteTemporal = paqueteTemporal;
+
+       
     }
 
     /**
@@ -61,9 +70,19 @@ public class RegistrarCliente extends javax.swing.JFrame {
 
         jLabel7.setText("N° Telefono:");
 
-        jButton1.setText("Cancelar");
+        jButton1.setText("Volver");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Guardar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -154,6 +173,59 @@ public class RegistrarCliente extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+private boolean camposLlenos() {
+    return !jTextField1.getText().isEmpty() &&
+           !jTextField2.getText().isEmpty() &&
+           !jTextField3.getText().isEmpty() &&
+           !jTextField4.getText().isEmpty() &&
+           !jTextField5.getText().isEmpty() &&
+           !jTextField6.getText().isEmpty();
+}
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        String nombre = jTextField1.getText();
+    String apellido = jTextField2.getText();
+    String correo = jTextField4.getText();
+    String direccion = jTextField5.getText();
+    long nroDocumento = 0;
+    long nroTelefono = 0;
+
+    // Muestra un cuadro de diálogo de confirmación
+    int confirmacion = JOptionPane.showConfirmDialog(this, "¿Seguro que quieres registrar al cliente?", "Confirmar Registro", JOptionPane.YES_NO_OPTION);
+// Verifica si los campos obligatorios están llenos
+    if (camposLlenos()) {
+        try {
+            // Intenta obtener los valores de los campos de texto numéricos
+            nroDocumento = Long.parseLong(jTextField3.getText());
+            nroTelefono = Long.parseLong(jTextField6.getText());
+        } catch (NumberFormatException e) {
+            // Si hay un error al convertir los valores numéricos, muestra un mensaje de error
+            JOptionPane.showMessageDialog(this, "Por favor, ingresa números válidos para N° Documento y N° Telefono.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;  // Sale del método sin continuar con el registro
+        }
+
+        // Muestra un cuadro de diálogo de confirmación
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            // Si el usuario elige "Sí", llama a la ControladoraCliente para registrar al cliente
+            controladoraCliente.registrarCliente(nombre, apellido, correo, direccion, nroDocumento, nroTelefono);
+            
+            // Puedes agregar más acciones después de registrar al cliente si es necesario
+            new BuscarClientes(paqueteTemporal).setVisible(true);
+            // Cierra la ventana actual
+            this.dispose();
+        }
+        // Si elige "No", no se hace nada y se mantiene en la misma ventana
+    } else {
+        // Si no todos los campos están llenos, muestra un mensaje de advertencia
+        JOptionPane.showMessageDialog(this, "Por favor, completa todos los campos.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+    }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       BuscarClientes atras = new BuscarClientes(paqueteTemporal);
+       atras.setVisible(true);
+       dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -179,4 +251,7 @@ public class RegistrarCliente extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
     // End of variables declaration//GEN-END:variables
+
+
+
 }

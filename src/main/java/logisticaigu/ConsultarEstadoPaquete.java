@@ -79,7 +79,7 @@ public class ConsultarEstadoPaquete extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Cancelar");
+        jButton1.setText("Volver");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -162,18 +162,29 @@ public class ConsultarEstadoPaquete extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-         int filaSeleccionada = tablafiltrar.getSelectedRow();
+      int filaSeleccionada = tablafiltrar.getSelectedRow();
 
-    if (filaSeleccionada != -1) { 
-        Paquete paquete = paquetes.get(filaSeleccionada);
-        
-        EstadoActualPaquete estadoActual = new EstadoActualPaquete();
-        estadoActual.mostrarEstadoPaquete(paquete);
-        estadoActual.setVisible(true);
+    if (filaSeleccionada != -1) {
+        paqueteSeleccionado = paquetes.get(filaSeleccionada);
+
+        // Aquí debes mostrar un JOptionPane con el estado del paquete
+        mostrarEstadoPaquete();
+
+    } else {
+        // No se ha seleccionado ningún paquete
+        javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "Por favor, seleccione un paquete antes de continuar.",
+                "Error",
+                javax.swing.JOptionPane.ERROR_MESSAGE
+        );
+    
     }//GEN-LAST:event_jButton2ActionPerformed
     }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        Menu atras = new Menu();
+        atras.setVisible(true);
+        dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -248,6 +259,15 @@ public class ConsultarEstadoPaquete extends javax.swing.JFrame {
         mostrarTodosLosPaquetes();
     }
    }
+   private void mostrarEstadoPaquete() {
+    // Muestra un JOptionPane con el estado del paquete
+    javax.swing.JOptionPane.showMessageDialog(
+            this,
+            "Estado del paquete: " + paqueteSeleccionado.getEstado(),
+            "Estado del Paquete",
+            javax.swing.JOptionPane.INFORMATION_MESSAGE
+    );
+}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

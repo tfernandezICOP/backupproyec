@@ -28,7 +28,18 @@ public class ControladoraPaquete {
     public void actualizarEstadoPaquete(Paquete paquete) {
         controlpersis.actualizarEstadoPaquete(paquete);
     }
+    public void guardarPaquete(Paquete paquete) {
+        controlpersis.guardarPaquete(paquete);
+    }
+    public List<Paquete> filtrarPaquetesPorEstado(String estado) {
+    return controlpersis.obtenerPaquetesPorEstado(estado);
+    }
     
-        
+    public void actualizarFechaEntregaPaquete(Paquete paquete) {
+    controlpersis.actualizarFechaentrega(paquete);
+    }    
+    
+    
 }
+
 

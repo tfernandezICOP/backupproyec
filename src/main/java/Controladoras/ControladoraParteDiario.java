@@ -4,7 +4,9 @@
  */
 package Controladoras;
 
+import java.util.List;
 import logisticalogica.ParteDiario;
+import logisticalogica.Vehiculo;
 import logisticapersistencia.ControladoraPersistencia;
 
 /**
@@ -16,4 +18,22 @@ public class ControladoraParteDiario {
     public void crearpartediario(ParteDiario partediario){
         controlpersis.crearpartediario(partediario);
     }
+    public void guardarpartediario(ParteDiario partediario){
+        controlpersis.guardarParteDiario(partediario);
+    }
+     public ParteDiario obtenerParteDiarioExistente(Vehiculo vehiculo) {
+        return controlpersis.obtenerParteDiarioExistente(vehiculo);
+    }
+     public int obtenerTotalKmVehiculo(Vehiculo vehiculo) {
+        return controlpersis.obtenerTotalKmVehiculo(vehiculo);
+    }
+public void actualizarParteDiario(ParteDiario parteDiario) {
+    controlpersis.actualizarParteDiario(parteDiario);
+}
+    
+public List<ParteDiario> obtenerParteDiarioPorVehiculo(Vehiculo vehiculo) {
+    return controlpersis.obtenerParteDiarioPorVehiculo(vehiculo);
+            
+}
+     
 }

@@ -33,6 +33,17 @@ public class ControladoraVehiculo {
     public List<Paquete> obtenerPaquetesPorVehiculo(Vehiculo vehiculo) {
         return controlpersis.obtenerPaquetesPorVehiculo(vehiculo);
     }
+    public Vehiculo obtenerVehiculoPorID(int vehiculoID) {
+        return controlpersis.obtenerVehiculoPorId(vehiculoID);
+    }
+    public Vehiculo guardarvehiculo(Vehiculo vehiculo){
+        return controlpersis.guardarvehiculo(vehiculo);
     
+    }
+    public List<Vehiculo> obtenerVehiculosConMantenimiento() {
+    return controlpersis.obtenerVehiculosConMantenimiento();
+    }
+    
+   
     
 }

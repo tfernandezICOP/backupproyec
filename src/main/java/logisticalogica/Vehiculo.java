@@ -103,11 +103,6 @@ import javax.persistence.Table;
     public Mantenimiento obtenerMantenimiento() {
         return this.mantenimiento;
     }
-
-    public void actualizarMantenimiento(Date nuevaFecha, int nuevosKilometros) {
-        if (this.mantenimiento != null) {
-            this.mantenimiento.setFecha(nuevaFecha);
-            this.mantenimiento.setKm(nuevosKilometros);
-        }
-    }
+    
+    
 }

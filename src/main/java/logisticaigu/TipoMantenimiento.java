@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import logisticalogica.DetalleMantenimiento;
 import logisticalogica.Mantenimiento;
+import logisticalogica.MantenimientoRealizado;
 import logisticalogica.Vehiculo;
 
 
@@ -19,19 +20,15 @@ import logisticalogica.Vehiculo;
  */
 public class TipoMantenimiento extends javax.swing.JFrame {
  private List<DetalleMantenimiento> detallemante;
-    private int mantenimientoID;
-    private Vehiculo vehiculoSeleccionado; 
     private DetalleMantenimiento tipoMantenimientoSeleccionado;
-
+    private MantenimientoRealizado mantenimientoRealizado;
     /**
      * Creates new form TipoMantenimiento
      */
-    public TipoMantenimiento(Vehiculo vehiculo) {
-    initComponents();
-    this.vehiculoSeleccionado = vehiculo; // Corregir la asignación del vehículo
-    ControladoraDetalleMante controladoraDetalleMante = new ControladoraDetalleMante();
-    detallemante = controladoraDetalleMante.obtenerDetallesMantenimiento();
-    mostrartiposervicio(detallemante);
+    public TipoMantenimiento(MantenimientoRealizado mantenimientoRealizado) {
+     initComponents();
+        this.mantenimientoRealizado = mantenimientoRealizado; // Asigna el MantenimientoRealizado
+        ControladoraDetalleMante controladoraDetalleMante = new ControladoraDetalleMante();
 }
    
 
@@ -49,9 +46,8 @@ public class TipoMantenimiento extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tablafiltrar = new javax.swing.JTable();
-        jButton3 = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -59,7 +55,12 @@ public class TipoMantenimiento extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Tipo de Mantenimiento");
 
-        jButton1.setText("Cancelar");
+        jButton1.setText("Volver");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Guardar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -68,20 +69,9 @@ public class TipoMantenimiento extends javax.swing.JFrame {
             }
         });
 
-        tablafiltrar.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null},
-                {null},
-                {null},
-                {null}
-            },
-            new String [] {
-                "Tipo de servicio"
-            }
-        ));
-        jScrollPane1.setViewportView(tablafiltrar);
-
-        jButton3.setText("Agregar");
+        jLabel2.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel2.setText("Ingresar tipo de mantenimiento:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -89,28 +79,29 @@ public class TipoMantenimiento extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 293, Short.MAX_VALUE)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton1))
-                    .addComponent(jScrollPane1))
+                    .addComponent(jTextField1))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(66, 66, 66)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 123, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
-                    .addComponent(jButton1)
-                    .addComponent(jButton3))
+                    .addComponent(jButton1))
                 .addGap(47, 47, 47))
         );
 
@@ -131,42 +122,56 @@ public class TipoMantenimiento extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    if (tipoMantenimientoSeleccionado != null) {
-        JOptionPane.showMessageDialog(null, "Tipo de Servicio Seleccionado: " + tipoMantenimientoSeleccionado.getTipoServicio());
-    } else {
-        JOptionPane.showMessageDialog(null, "Seleccione un tipo de servicio.");
-    }
+        String tipoMantenimientoIngresado = jTextField1.getText().trim();
+        guardarTipoMantenimiento(tipoMantenimientoIngresado);
+
+      
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
-   private void mostrartiposervicio(List<DetalleMantenimiento> detallemante) {
-    DefaultTableModel modelo = (DefaultTableModel) tablafiltrar.getModel();
-    modelo.setRowCount(0);
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        AvisosMantenimiento atras = new AvisosMantenimiento();
+        atras.setVisible(true);
+        dispose();
+            
 
-    for (DetalleMantenimiento detallemantenimiento : detallemante) {
-        modelo.addRow(new Object[]{
-            detallemantenimiento.getTipoServicio()
-        });
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+   private void guardarTipoMantenimiento(String tipoMantenimiento) {
+    if (tipoMantenimiento.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Ingrese el tipo de mantenimiento.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
     }
 
-    tablafiltrar.getSelectionModel().addListSelectionListener((event) -> {
-        if (!event.getValueIsAdjusting()) {
-            int selectedRow = tablafiltrar.getSelectedRow();
-            if (selectedRow != -1) {
-                tipoMantenimientoSeleccionado = detallemante.get(selectedRow);
-            }
-        }
-    });
+    // Crear un objeto DetalleMantenimiento con el tipo ingresado
+    DetalleMantenimiento detalleMantenimiento = new DetalleMantenimiento();
+    detalleMantenimiento.setTipoServicio(tipoMantenimiento);
+
+    // Establecer la relación con MantenimientoRealizado
+    detalleMantenimiento.setMantenimientoRealizado(mantenimientoRealizado);
+
+    // Guardar el DetalleMantenimiento en la base de datos o realizar la operación necesaria
+    ControladoraDetalleMante controladoraDetalleMante = new ControladoraDetalleMante();
+    controladoraDetalleMante.guardarTipoMantenimiento(detalleMantenimiento);
+
+    // Mostrar un mensaje de éxito
+    JOptionPane.showMessageDialog(this, "Tipo de mantenimiento guardado exitosamente");
+
+    // Puedes cerrar la ventana o realizar otras acciones según tu flujo
+    this.dispose();
 }
+
+
+
+
    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tablafiltrar;
+    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
     

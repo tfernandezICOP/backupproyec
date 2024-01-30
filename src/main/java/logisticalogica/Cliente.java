@@ -4,11 +4,6 @@
  */
 package logisticalogica;
 
-
-
-
-
-
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,15 +33,15 @@ public class Cliente implements Serializable {
     private String nombre;
 
     @Column(name = "nro_documento")
-    private Integer nro_documento;
+    private long nro_documento;
 
     @Column(name = "nro_telefono")
-    private Integer nro_telefono;
+    private long nro_telefono;
 
     public Cliente() {
     }
 
-    public Cliente(Integer clienteID, String apellido, String correoElectronico, String direccion, String nombre, Integer nro_documento, Integer nro_telefono) {
+    public Cliente(Integer clienteID, String apellido, String correoElectronico, String direccion, String nombre, long nro_documento, long nro_telefono) {
         this.clienteID = clienteID;
         this.apellido = apellido;
         this.correoElectronico = correoElectronico;
@@ -55,6 +50,10 @@ public class Cliente implements Serializable {
         this.nro_documento = nro_documento;
         this.nro_telefono = nro_telefono;
     }
+
+    
+    
+    
 
     public Integer getClienteID() {
         return clienteID;
@@ -96,21 +95,27 @@ public class Cliente implements Serializable {
         this.nombre = nombre;
     }
 
-    public Integer getNro_documento() {
+    public long getNro_documento() {
         return nro_documento;
     }
 
-    public void setNro_documento(Integer nro_documento) {
+    public void setNro_documento(long nro_documento) {
         this.nro_documento = nro_documento;
     }
 
-    public Integer getNro_telefono() {
+    public long getNro_telefono() {
         return nro_telefono;
     }
 
-    public void setNro_telefono(Integer nro_telefono) {
+    public void setNro_telefono(long nro_telefono) {
         this.nro_telefono = nro_telefono;
     }
+
+   
+
+    
+
+   
     
     
 }

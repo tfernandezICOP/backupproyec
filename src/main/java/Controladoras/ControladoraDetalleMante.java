@@ -15,7 +15,7 @@ import logisticapersistencia.ControladoraPersistencia;
  */
 public class ControladoraDetalleMante {
     ControladoraPersistencia controlpersis = new ControladoraPersistencia();
-    public void guardarTipoMantenimiento(DetalleMantenimiento tipoMantenimiento, int idMantenimiento) {
+    public void guardarTipoMantenimiento(DetalleMantenimiento tipoMantenimiento) {
        
         controlpersis.guardarTipoMantenimiento(tipoMantenimiento);
     }
@@ -23,5 +23,7 @@ public class ControladoraDetalleMante {
     public List<DetalleMantenimiento> obtenerDetallesMantenimiento() {
        return controlpersis.obtenerDetallesMantenimiento();
     }
-    
+    public void actualizarDetalleMantenimiento (DetalleMantenimiento detalleMantenimiento){
+        controlpersis.actualizarDetalleMantenimiento(detalleMantenimiento);
+    }
 }

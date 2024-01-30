@@ -16,6 +16,7 @@ import Controladoras.ControladoraVehiculo;
 import Controladoras.ControladoraViaje;
 import Controladoras.ControladoraViajePaquete;
 import java.util.Date;
+import logisticaigu.Login;
 import logisticaigu.Menu;
 import logisticalogica.Cliente;
 import logisticalogica.DetalleMantenimiento;
@@ -28,8 +29,15 @@ import logisticalogica.ParteDiario;
 import logisticalogica.Vehiculo;
 import logisticalogica.Viaje;
 import logisticalogica.ViajePaquete;
+
 import logisticapersistencia.ControladoraPersistencia;
-import logisticapersistencia.PaqueteJpaController;
+import logisticapersistencia.DetalleMantenimientoJpaController;
+import logisticapersistencia.MantenimientoJpaController;
+import logisticapersistencia.MantenimientoRealizadoJpaController;
+import logisticapersistencia.ParteDiarioJpaController;
+import logisticapersistencia.RolUsuarioJpaController;
+import logisticapersistencia.UsuarioJpaController;
+
 
 /**
  *
@@ -446,10 +454,15 @@ controlviajepaquete.crearviajepaquete(viajepaquete5);
      controlvehiculo.crearvehiculo(vehiculo10);
 
 
-   Menu menu = new Menu();
-   menu.setVisible(true);
-*/
+   Login login = new Login();
+   login.setVisible(true);
+
     
-        PaqueteJpaController paque = new PaqueteJpaController();
-}
+   */
+    /*Menu menu = new Menu();
+    menu.setVisible(true);
+     */
+    
+        
+    }
 }

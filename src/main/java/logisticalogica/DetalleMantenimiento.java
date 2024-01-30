@@ -5,20 +5,12 @@
 package logisticalogica;
 
 
-import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-    
-    @Entity
-    @Table(name = "DetalleMantenimiento")
-    public class DetalleMantenimiento implements Serializable {
+@Entity
+@Table(name = "DetalleMantenimiento")
+public class DetalleMantenimiento {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "detalleMantenimientoID")
@@ -28,17 +20,22 @@ import javax.persistence.Table;
     private String tipoServicio;
 
     @ManyToOne
-    @JoinColumn(name = "mantenimientoID")
-    private Mantenimiento mantenimiento;
+    @JoinColumn(name = "mantenimientoRealizadoID", referencedColumnName = "mantenimientoRealizadoID")
+    private MantenimientoRealizado mantenimientoRealizado;
 
+    // Constructores, getters y setters
+
+    // Constructor sin argumentos requerido por JPA
     public DetalleMantenimiento() {
     }
 
-    public DetalleMantenimiento(Integer detalleMantenimientoID, String tipoServicio, Mantenimiento mantenimiento) {
-        this.detalleMantenimientoID = detalleMantenimientoID;
+    // Constructor con todos los campos excepto el ID (ya que se genera automáticamente)
+    public DetalleMantenimiento(String tipoServicio, MantenimientoRealizado mantenimientoRealizado) {
         this.tipoServicio = tipoServicio;
-        this.mantenimiento = mantenimiento;
+        this.mantenimientoRealizado = mantenimientoRealizado;
     }
+
+    // Getters y setters
 
     public Integer getDetalleMantenimientoID() {
         return detalleMantenimientoID;
@@ -56,13 +53,11 @@ import javax.persistence.Table;
         this.tipoServicio = tipoServicio;
     }
 
-    public Mantenimiento getMantenimiento() {
-        return mantenimiento;
+    public MantenimientoRealizado getMantenimientoRealizado() {
+        return mantenimientoRealizado;
     }
 
-    public void setMantenimiento(Mantenimiento mantenimiento) {
-        this.mantenimiento = mantenimiento;
+    public void setMantenimientoRealizado(MantenimientoRealizado mantenimientoRealizado) {
+        this.mantenimientoRealizado = mantenimientoRealizado;
     }
-
-    
 }

@@ -4,8 +4,11 @@
  */
 package Controladoras;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import logisticalogica.Mantenimiento;
+import logisticalogica.Vehiculo;
 import logisticapersistencia.ControladoraPersistencia;
 
 /**
@@ -18,8 +21,17 @@ public class ControladoraMantenimiento {
        controlpersis.crearmantenimiento (mantenimiento);
         
     }
-     public void insertarMantenimiento(Date fechaDate, int nuevosKilometros, int vehiculoId) {
-        controlpersis.insertarMantenimiento(fechaDate, nuevosKilometros, vehiculoId);
-     }
-     
+   public void guardarmantenimiento (Mantenimiento mantenimiento){
+       controlpersis.guardarMantenimiento(mantenimiento);
+   }
+  public List<Mantenimiento> obtenerTodosLosMantenimientos() {
+    return controlpersis.obtenerTodosLosMantenimientos();
+}
+  public void actualizarMantenimiento(Mantenimiento mantenimientoActualizado, int nuevoskm) {
+   controlpersis.actualizarMantenimiento(mantenimientoActualizado, nuevoskm);
+  }
+  
+  public Mantenimiento obtenerMantenimientoExistente(Vehiculo vehiculo) {
+      return controlpersis.obtenerMantenimientoExistente(vehiculo);
+  }
 }
